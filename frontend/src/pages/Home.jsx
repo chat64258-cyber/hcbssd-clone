@@ -88,9 +88,9 @@ export default function HomePage() {
 
   /* تحميل البيانات */
   useEffect(() => {
-    api.get("/initiatives").then(r => setInitiatives(r.data)).catch(() => {});
-    api.get("/stats").then(r => setStats(r.data)).catch(() => {});
-    api.get("/news").then(r => setNews(r.data.slice(0, 3))).catch(() => {});
+    api.get("/initiatives").then(r => { if (Array.isArray(r.data)) setInitiatives(r.data); }).catch(() => {});
+    api.get("/stats").then(r => { if (Array.isArray(r.data)) setStats(r.data); }).catch(() => {});
+    api.get("/news").then(r => { if (Array.isArray(r.data)) setNews(r.data.slice(0, 3)); }).catch(() => {});
   }, []);
 
   /* تدوير الشرائح */
@@ -544,3 +544,4 @@ export default function HomePage() {
     </main>
   );
 }
+

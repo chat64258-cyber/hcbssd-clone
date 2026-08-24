@@ -4,10 +4,7 @@ const BASE = import.meta.env.VITE_API_URL
   ? import.meta.env.VITE_API_URL.replace(/\/$/, "") + "/api"
   : "/api";
 
-const api = axios.create({
-  baseURL: BASE,
-  timeout: 10000,
-});
+const api = axios.create({ baseURL: BASE, timeout: 10000 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("hcbssd_token");
@@ -15,15 +12,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// منع crash عند فشل الاتصال بالباك إند
+// إذا Vercel أرجع HTML بدل JSON (لأن الباك إند مش شاغل)
+// نرفضها بدل ما تكسر الـ components
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (!error.response) {
-      console.warn("Backend unavailable:", error.message);
+  (response) => {
+    const ct = response.headers["content-type"] || "";
+    if (ct.includes("text/html")) {
+      return Promise.reject(new Error("Backend offline"));
     }
-    return Promise.reject(error);
-  }
+    return response;
+  },
+  (error) => Promise.reject(error)
 );
 
 export default api;
