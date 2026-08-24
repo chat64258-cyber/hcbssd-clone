@@ -1,0 +1,13 @@
+﻿[build]
+  base    = "frontend"
+  publish = "frontend/dist"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# إعادة توجيه كل المسارات لـ React Router (SPA)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

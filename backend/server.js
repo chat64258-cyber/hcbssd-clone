@@ -1,4 +1,4 @@
-﻿import express from "express";
+import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -14,7 +14,23 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], credentials: true }));
+// CORS — يقبل localhost (dev) وأي نطاق Netlify أو نطاق مخصص
+const ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_URL, // يُضبط على Render لاحقاً
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || ALLOWED_ORIGINS.includes(origin) || origin.endsWith(".netlify.app")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
