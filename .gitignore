@@ -1,0 +1,24 @@
+﻿# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+
+# Database (تُنشأ تلقائياً)
+backend/data.json
+
+# Uploads
+backend/uploads/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
